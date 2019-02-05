@@ -8,16 +8,13 @@
 
 
 #import "GMImagePickerController.h"
-#import "UIImage+fixOrientation.m"
-
-#import <Photos/Photos.h>
-
+@import UIKit;
+@import Photos;
 
 
 @interface GMGridViewController : UICollectionViewController
 
 @property (strong) PHFetchResult *assetsFetchResults;
-@property (nonatomic, weak) NSMutableDictionary * dic_asset_fetches;
 
 -(id)initWithPicker:(GMImagePickerController *)picker;
     

@@ -6,9 +6,8 @@
 //  Copyright (c) 2014 Guillermo Muntaner Perelló. All rights reserved.
 //
 
-
-#import <Photos/Photos.h>
-
+@import UIKit;
+@import Photos;
 
 @interface GMAlbumsViewCell : UITableViewCell
 

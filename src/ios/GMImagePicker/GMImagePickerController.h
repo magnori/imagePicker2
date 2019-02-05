@@ -6,10 +6,9 @@
 //  Copyright (c) 2014 Guillermo Muntaner Perelló. All rights reserved.
 //
 
+@import UIKit;
+@import Photos;
 
-#import <Photos/Photos.h>
-
-#import "GMFetchItem.h"
 
 //This is the default image picker size!
 //static CGSize const kPopoverContentSize = {320, 480};
@@ -25,8 +24,6 @@ static CGSize const kPopoverContentSize = {480, 720};
  */
 @interface GMImagePickerController : UIViewController
 
-- (id)init:(bool)allow_v;
-
 /**
  *  The assets picker’s delegate object.
  */
@@ -38,19 +35,44 @@ static CGSize const kPopoverContentSize = {480, 720};
  *  You can add assets before presenting the picker to show the user some preselected assets.
  */
 @property (nonatomic, strong) NSMutableArray *selectedAssets;
-@property (nonatomic, strong) NSMutableArray *selectedFetches;
 
 
 /** UI Customizations **/
 
 /**
- *  Determines whether or not the number of assets is shown in the Album list.
- *  The number of assets is visible by default.
+ *  Determines which smart collections are displayed (int array of enum: PHAssetCollectionSubtypeSmartAlbum)
+ *  The default smart collections are: 
+ *  - Favorites
+ *  - RecentlyAdded
+ *  - Videos
+ *  - SlomoVideos
+ *  - Timelapses
+ *  - Bursts
+ *  - Panoramas
  */
 @property (nonatomic, strong) NSArray* customSmartCollections;
 
 /**
- *  If set, it displays a promt in the navigation bar
+ *  Determines which media types are allowed (int array of enum: PHAssetMediaType)
+ *  This defaults to all media types (view, audio and images)
+ *  This can override customSmartCollections behavior (ie, remove video-only smart collections)
+ */
+@property (nonatomic, strong) NSArray* mediaTypes;
+
+/**
+ *  If set, it displays a this string instead of the localised default of "Done" on the done button. Note also that this
+ *  is not used when a single selection is active since the selection of the chosen photo closes the VC thus rendering
+ *  the button pointless.
+ */
+@property (nonatomic) NSString* customDoneButtonTitle;
+
+/**
+ *  If set, it displays this string instead of the localised default of "Cancel" on the cancel button
+ */
+@property (nonatomic) NSString* customCancelButtonTitle;
+
+/**
+ *  If set, it displays a prompt in the navigation bar
  */
 @property (nonatomic) NSString* customNavigationBarPrompt;
 
@@ -66,9 +88,44 @@ static CGSize const kPopoverContentSize = {480, 720};
  */
 @property (nonatomic, assign) BOOL displayAlbumsNumberOfAssets;
 
+/**
+ *  Automatically disables the "Done" button if nothing is selected. Defaults to YES.
+ */
+@property (nonatomic, assign) BOOL autoDisableDoneButton;
 
-@property (nonatomic, assign) BOOL allow_video;
-@property (nonatomic, assign) NSInteger maximumImagesCount;
+/**
+ *  Use the picker either for miltiple image selections, or just a single selection. In the case of a single selection
+ *  the VC is closed on selection so the Done button is neither displayed or used. Default is YES.
+ */
+@property (nonatomic, assign) BOOL allowsMultipleSelection;
+
+/**
+ * In the case where allowsMultipleSelection = NO, set this to YES to have the user confirm their selection. Default is NO.
+ */
+@property (nonatomic, assign) BOOL confirmSingleSelection;
+
+/**
+ * If set, it displays this string (if confirmSingleSelection = YES) instead of the localised default.
+ */
+@property (nonatomic) NSString *confirmSingleSelectionPrompt;
+
+/**
+ *  True to always show the toolbar, with a camera button allowing new photos to be taken. False to auto show/hide the
+ *  toolbar, and have no camera button. Default is false. If true, this renders displaySelectionInfoToolbar a no-op.
+ */
+@property (nonatomic, assign) BOOL showCameraButton;
+
+/**
+ * True to auto select the image(s) taken with the camera if showCameraButton = YES. In the case of allowsMultipleSelection = YES,
+ * this will trigger the selection handler too.
+ */
+@property (nonatomic, assign) BOOL autoSelectCameraImages;
+
+/**
+ * If set, the user is allowed to edit captured still images
+ */
+@property (nonatomic, assign) BOOL allowsEditingCameraImages;
+
 /**
  *  Grid customizations:
  *
@@ -80,7 +137,42 @@ static CGSize const kPopoverContentSize = {480, 720};
 @property (nonatomic) NSInteger colsInLandscape;
 @property (nonatomic) double minimumInteritemSpacing;
 
+/**
+ * UI customizations:
+ *
+ * - pickerBackgroundColor: The colour for all backgrounds; behind the table and cells. Defaults to [UIColor whiteColor]
+ * - pickerTextColor: The color for text in the views. This needs to work with pickerBackgroundColor! Default of darkTextColor
+ * - toolbarBarTintColor: The color for the background tint of the toolbar
+ * - toolbarTextColor: The color of the text on the toolbar
+ * - toolbarTintColor: The tint colour used for any buttons on the toolbar
+ * - navigationBarBackgroundColor: The background of the navigation bar. Defaults to [UIColor whiteColor]
+ * - navigationBarTextColor: The color for the text in the navigation bar. Defaults to [UIColor darkTextColor]
+ * - navigationBarTintColor: The tint color used for any buttons on the navigation Bar
+ * - pickerFontName: The font to use everywhere. Defaults to HelveticaNeue. It is advised if you set this to check, and possibly set, appropriately the custom font sizes. For font information, check http://www.iosfonts.com/
+ * - pickerFontName: The font to use everywhere. Defaults to HelveticaNeue-Bold. It is advised if you set this to check, and possibly set, appropriately the custom font sizes.
+ * - pickerFontNormalSize: The size of the custom font used in most places. Defaults to 14.0f
+ * - pickerFontHeaderSize: The size of the custom font for album names. Defaults to 17.0f
+ * - pickerStatusBarsStyle: On iPhones this will matter if custom navigation bar colours are being used. Defaults to UIStatusBarStyleDefault
+ * - useCustomFontForNavigationBar: True to use the custom font (or it's default) in the navigation bar, false to leave to iOS Defaults.
+ */
+@property (nonatomic, strong) UIColor *pickerBackgroundColor;
+@property (nonatomic, strong) UIColor *pickerTextColor;
+@property (nonatomic, strong) UIColor *toolbarBarTintColor;
+@property (nonatomic, strong) UIColor *toolbarTextColor;
+@property (nonatomic, strong) UIColor *toolbarTintColor;
+@property (nonatomic, strong) UIColor *navigationBarBackgroundColor;
+@property (nonatomic, strong) UIColor *navigationBarTextColor;
+@property (nonatomic, strong) UIColor *navigationBarTintColor;
+@property (nonatomic, strong) NSString *pickerFontName;
+@property (nonatomic, strong) NSString *pickerBoldFontName;
+@property (nonatomic) CGFloat pickerFontNormalSize;
+@property (nonatomic) CGFloat pickerFontHeaderSize;
+@property (nonatomic) UIStatusBarStyle pickerStatusBarStyle;
+@property (nonatomic) BOOL useCustomFontForNavigationBar;
 
+/**
+ * A reference to the navigation controller used to manage the whole picking process
+ */
 @property (nonatomic, strong) UINavigationController *navigationController;
 
 /**
@@ -88,10 +180,6 @@ static CGSize const kPopoverContentSize = {480, 720};
  */
 - (void)selectAsset:(PHAsset *)asset;
 - (void)deselectAsset:(PHAsset *)asset;
-
-- (void)selectFetchItem:(GMFetchItem *)asset;
-- (void)deselectFetchItem:(GMFetchItem *)asset;
-
 
 /**
  *  User finish Actions
