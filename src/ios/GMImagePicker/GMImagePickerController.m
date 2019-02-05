@@ -55,7 +55,7 @@
         
         // UI Customisation
         _pickerBackgroundColor = [UIColor whiteColor];
-        _pickerTextColor = [UIColor darkTextColor];
+        pickerTextColor = [UIColor darkTextColor];
         _pickerFontName = @"HelveticaNeue";
         _pickerBoldFontName = @"HelveticaNeue-Bold";
         _pickerFontNormalSize = 14.0f;
