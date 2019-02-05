@@ -47,19 +47,19 @@
         //_customSmartCollections=nil;
         
         // Which media types will display
-        _mediaTypes = @[@(PHAssetMediaTypeAudio),
+        mediaTypes = @[@(PHAssetMediaTypeAudio),
                         @(PHAssetMediaTypeVideo),
                         @(PHAssetMediaTypeImage)];
         
         self.preferredContentSize = kPopoverContentSize;
         
         // UI Customisation
-        _pickerBackgroundColor = [UIColor whiteColor];
+        pickerBackgroundColor = [UIColor whiteColor];
         pickerTextColor = [UIColor darkTextColor];
-        _pickerFontName = @"HelveticaNeue";
-        _pickerBoldFontName = @"HelveticaNeue-Bold";
-        _pickerFontNormalSize = 14.0f;
-        _pickerFontHeaderSize = 17.0f;
+        pickerFontName = @"HelveticaNeue";
+        pickerBoldFontName = @"HelveticaNeue-Bold";
+        pickerFontNormalSize = 14.0f;
+        pickerFontHeaderSize = 17.0f;
         
         _navigationBarBackgroundColor = [UIColor whiteColor];
         _navigationBarTextColor = [UIColor darkTextColor];
