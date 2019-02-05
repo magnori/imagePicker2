@@ -267,7 +267,7 @@ static NSString * const CollectionCellReuseIdentifier = @"CollectionCell";
     // Set the label
     cell.titleLabel.font = [UIFont fontWithName:self.picker.pickerFontName size:self.picker.pickerFontHeaderSize];
     cell.titleLabel.text = (self.collectionsFetchResultsTitles[indexPath.section])[indexPath.row];
-    cell.titleLabel.textColor = self.picker.pickerTextColor;
+    //cell.titleLabel.textColor = self.picker.pickerTextColor;
     
     // Retrieve the pre-fetched assets for this album:
     PHFetchResult *assetsFetchResult = (self.collectionsFetchResultsAssets[indexPath.section])[indexPath.row];
@@ -276,7 +276,7 @@ static NSString * const CollectionCellReuseIdentifier = @"CollectionCell";
     if (self.picker.displayAlbumsNumberOfAssets) {
         cell.infoLabel.font = [UIFont fontWithName:self.picker.pickerFontName size:self.picker.pickerFontNormalSize];
         cell.infoLabel.text = [self tableCellSubtitle:assetsFetchResult];
-        cell.infoLabel.textColor = self.picker.pickerTextColor;
+        //cell.infoLabel.textColor = self.picker.pickerTextColor;
     }
     
     // Set the 3 images (if exists):
@@ -369,7 +369,7 @@ static NSString * const CollectionCellReuseIdentifier = @"CollectionCell";
 
     // Default is a bold font, but keep this styled as a normal font
     header.textLabel.font = [UIFont fontWithName:self.picker.pickerFontName size:self.picker.pickerFontNormalSize];
-    header.textLabel.textColor = self.picker.pickerTextColor;
+    //header.textLabel.textColor = self.picker.pickerTextColor;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
